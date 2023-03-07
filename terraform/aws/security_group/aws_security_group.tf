@@ -1,25 +1,25 @@
 resource "aws_security_group" "example" {
-  name        = "example-security-group"
-  description = "Example security group"
+  name        = var.name
+  description = var.description
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = var.ssh_from_port
+    to_port     = var.ssh_to_port
+    protocol    = var.ssh_protocol
+    cidr_blocks = var.ssh_cidr_blocks
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = var.http_from_port
+    to_port     = var.http_to_port
+    protocol    = var.http_protocol
+    cidr_blocks = var.http_cidr_blocks
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = var.egress_from_port
+    to_port     = var.egress_to_port
+    protocol    = var.egress_protocol
+    cidr_blocks = var.egress_cidr_blocks
   }
 }
