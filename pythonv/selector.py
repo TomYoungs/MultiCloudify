@@ -7,6 +7,20 @@ custom_theme = Theme({"success": "green", "error": "bold red"})
 
 console = Console()
 
+def repoCreator():
+    console.print("Repo Creator selected 📁", style="underline bold")
+    console.print("Please select first provider")
+    options = ["AWS", "Azure", "GCP (wip)"]
+    terminal_menu = TerminalMenu(options)
+    menu_entry_index = terminal_menu.show()
+    if menu_entry_index == 0:
+        console.print("0")   
+    elif menu_entry_index == 1:
+        console.print("1")  
+    elif menu_entry_index == 2:
+        console.print("2")  
+
+# SELECTOR STARTING POINT
 console.print("""\
 [magenta]
               _ _   _   ___ _                 _ _  __       
@@ -24,12 +38,17 @@ options = ["Repo Creator", "Terraform Generator"]
 terminal_menu = TerminalMenu(options)
 menu_entry_index = terminal_menu.show()
 
-console.print("")
+console.print("\n")
 
 if menu_entry_index == 0:
-    console.print("Repo Creator selected 📁", style="underline bold")
+    repoCreator()
+    
 elif menu_entry_index == 1:
     console.print("Terraform generator selected 🍀", style="underline bold")
+
+
+
+
 
 
 
