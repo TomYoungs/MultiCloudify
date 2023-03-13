@@ -15,8 +15,3 @@ module "basic_ec2" {
   ami = "ami-0568936c8d2b91c4e"
   instance_type = "t2.micro"
 }
-
-# A necessary component of a EC2, this essentially is a virtual firewall that managed inbound and outbound traffic for a EC2
-# in the version below all the defaults are being used so there is no need to reference them here 
-# see ./security_group/variables.tf for details
-
