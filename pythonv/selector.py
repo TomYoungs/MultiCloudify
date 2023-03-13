@@ -19,15 +19,83 @@ console = Console()
 def repoCreator():
     console.print("Repo Creator selected 📁", style="underline bold")
     console.print("Please select first provider")
-    options = ["AWS", "Azure", "GCP (wip)"]
+    options = ["AWS", "Azure", "GCP (wip), Done"]
+    choice = False
     terminal_menu = TerminalMenu(options)
-    menu_entry_index = terminal_menu.show()
-    if menu_entry_index == 0:
-        awsOption()
-    elif menu_entry_index == 1:
-        console.print("1")  
-    elif menu_entry_index == 2:
-        console.print("2")  
+    awsOptions = [""]
+    azureOption = [""]
+    gcpOption = [""]
+
+    while choice:
+        menu_entry_index = terminal_menu.show()
+        if menu_entry_index == 0:
+            awsOptions = awsOption()
+        elif menu_entry_index == 1:
+            azureOption = azureOption() 
+        elif menu_entry_index == 2:
+            gcpOption = gcpOption()
+        elif menu_entry_index == 3:
+            choice = True
+    
+    console.print("Selected options:")
+    if awsOption:
+        for option in awsOption():
+            console.print(f"aws - {option}")
+    if azureOption:
+        for option in azureOption():
+            console.print(f"azure - {option}")
+    if gcpOption:
+        for option in gcpOption():
+            console.print(f"gcp - {option}")
+
+    confirmstart = console.input("\n[bold]start repo generation?[/] (Y/n)")
+    if confirmstart.lower() == "y":
+        print("Starting repo generation...")
+    elif confirmstart.lower() == "n":
+        print("Aborting repo generation.")
+        return 
+    else:
+        print("Invalid input. Aborting repo generation.")
+        return
+
+    folder_name = "infra-tools"
+    file_name = "main.tf"
+    path = "../../" + str(folder_name)
+    
+    #jinja README variables
+    project_name = folder_name
+    project_description = f"""\
+    Infrastructure repository contains:
+    
+    {folder_name}/
+        ├── aws/
+        |   ├── setups/
+        |   ├── modules/
+        ├── azure/
+        |   ├── setups/
+        |   ├── modules/
+        ├── gcp/
+        |   ├── setups/
+        |   ├── modules/
+                                """
+    usage_instructions = "These are instructions for using my project."
+    #/README
+
+    #create base repo
+    if not os.path.exists(path):
+        os.system(f"cp -r ./templates/base {path}")
+
+    #jinja render
+    template = template_env.get_template("README_template.md")
+    output = template.render(
+        project_name=project_name,
+        project_description=project_description,
+        usage_instructions=usage_instructions)
+
+    with open(os.path.join("../..", folder_name, "README.md"), "w") as f:
+        f.write(output)
+
+
 
 def awsOption():
     console.print("you have selected [cyan]AWS[/]")
@@ -43,47 +111,7 @@ def awsOption():
         "Select options:",
         choices=options
     ).ask()
-    
-    print("Selected options:")
-    for option in selected_options:
-        print(f"- {option}")
-    confirmstart = console.input("[bold]start repo generation?[/] (Y/n)")
-    if confirmstart.lower() == "y":
-        print("Starting repo generation...")
-        # Perform actions to generate repo
-    elif confirmstart.lower() == "n":
-        print("Aborting repo generation.")
-        return 
-    else:
-        print("Invalid input. Aborting repo generation.")
-        return
-
-    folder_name = "infra-tools"
-    file_name = "main.tf"
-    path = "../../" + str(folder_name)
-    project_name = folder_name
-    project_description = f"""\
-    Infrastructure repository contains:
-    
-    {folder_name}/
-        ├── aws/
-        |   ├── setups/
-        |   ├── modules/
-                                """
-    usage_instructions = "These are instructions for using my project."
-
-    if not os.path.exists(path):
-        os.system(f"cp -r ./templates/base {path}")
-
-    template = template_env.get_template("README_template.md")
-    output = template.render(
-        project_name=project_name,
-        project_description=project_description,
-        usage_instructions=usage_instructions)
-
-    with open(os.path.join("../..", folder_name, "README.md"), "w") as f:
-        f.write(output)
-
+    return selected_options
 
 def azureOption():
     return 0
