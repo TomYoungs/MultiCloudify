@@ -1,3 +1,5 @@
 rich
 simple-term-menu
 prompt_toolkit
+questionary
+jinja2
