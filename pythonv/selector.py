@@ -22,7 +22,6 @@ path = "../../" + str(folder_name)
 
 def repoCreator():
     console.print("Repo Creator selected 📁", style="underline bold")
-    console.print("Please select providers")
     options = ["AWS", "Azure", "GCP (wip)", "Done"]
     terminal_menu = TerminalMenu(options)
     awsOptions, azureOptions, gcpOptions = [''] * 3 # initialise all 3
@@ -30,6 +29,7 @@ def repoCreator():
     # select multiple providers till "done"
     menu_entry_index = 5
     while not menu_entry_index == 3:
+        console.print("\nPlease select provider:")
         menu_entry_index = terminal_menu.show()
         if menu_entry_index == 0:
             awsOptions = awsOption()
@@ -92,27 +92,21 @@ def repoCreator():
         terraformSelector(awsOptions, 'aws') 
     if azureOptions:
         terraformSelector(azureOptions, 'azure')
-        console.print("azure tf")
     if gcpOptions:
         terraformSelector(gcpOptions, 'gcp')
         console.print("gcp tf")
 
 def terraformSelector(options, path):
     template = template_env.get_template(path + "-main_template.j2")
-    output = template.render(
-        basicvm=True)
+    #inside the template file is a for loop that iterates over options and adds whichever is in the array
+    output = template.render(selected_options=options)
 
     with open(os.path.join("../..", folder_name, path, "setups", "main.tf"), "w") as f:
         f.write(output)
 
-    
-
-
 def awsOption():
     console.print("you have selected [cyan]AWS[/]")
-    console.print("please select options you want\n(note some options are packaged with others please check that you don't have conflicting options when deploying)") 
-    #TODO: add built in selector and maybe a info menu
-    console.print("single VM, cluster of VM, static web app\n")
+    console.print("(note some options are packaged with others please check that you don't have conflicting options when deploying)", style="italic Blue") 
     options = [
         {"name": "Single EC2 (VM)", "checked": False},
         {"name": "Cluster of EC2s", "checked": False},
@@ -122,16 +116,12 @@ def awsOption():
         "Select options:",
         choices=options
     ).ask()
-    console.print("Selected options:")
-    for option in selected_options:
-        console.print(f"aws - {option}")
     
     return selected_options
 
 def azureOption():
     console.print("you have selected [magenta]AZURE[/]")
-    console.print("please select options you want\n(note some options are packaged with others please check that you don't have conflicting options when deploying)") 
-    #TODO: add built in selector and maybe a info menu
+    console.print("(note some options are packaged with others please check that you don't have conflicting options when deploying)", style="italic Blue") 
     options = [
         {"name": "Single Virtual Machine", "checked": False},
         {"name": "Cluster of Virtual Machines", "checked": False},
@@ -141,10 +131,7 @@ def azureOption():
         "Select options:",
         choices=options
     ).ask()
-    console.print("Selected options:")
-    for option in selected_options:
-        console.print(f"azure - {option}")
-    
+
     return selected_options
 
 # SELECTOR STARTING POINT
@@ -165,7 +152,6 @@ options = ["Repo Creator", "Terraform Generator"]
 terminal_menu = TerminalMenu(options)
 menu_entry_index = terminal_menu.show()
 
-console.print("\n")
 
 if menu_entry_index == 0:
     repoCreator()
