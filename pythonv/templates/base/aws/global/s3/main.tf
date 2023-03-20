@@ -1,16 +1,3 @@
-terraform {
-  #NOTE: one of the limitations of backend is that values need to be hard coded 
-  # so it's important that if the S3 name is updated that its manually updated are all mentions
-  backend "s3" {
-    bucket = "infra-tools-terraform-state"
-    key = "global/s3/terraform.tfstate"
-    region = "us-east-2"
-
-    dynamodb_table = "infra-tools-tf-locks"
-    encrypt = true
-  }
-}
-
 provider "aws" {
   region = "us-east-2"
 }

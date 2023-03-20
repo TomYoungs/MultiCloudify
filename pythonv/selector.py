@@ -101,7 +101,7 @@ def terraformSelector(options, path):
     #inside the template file is a for loop that iterates over options and adds whichever is in the array
     output = template.render(selected_options=options)
 
-    with open(os.path.join("../..", folder_name, path, "setups", "main.tf"), "w") as f:
+    with open(os.path.join("../..", folder_name, path, "stage/services", "main.tf"), "w") as f:
         f.write(output)
 
 def awsOption():
