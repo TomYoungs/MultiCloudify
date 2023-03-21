@@ -1,10 +1,18 @@
 # visit docs for more information 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
 
+terraform {
+  # use tf init -backend-config=backend.hcl to get all parameters
+  backend "s3" {
+    key = "aws/stage/services/terraform.tfstate"
+  }
+}
+
 #Establish what provider is being used, azure/gcp/aws etc.
 provider "aws" {
   region = "us-east-2"
 }
+
 {% for option in selected_options -%}
   {% if option == "Single EC2 (VM)" -%}
 # refers to a EC2 instance (Virtual Machine) in this example the EC2 is being created from a module in ./instance/aws_instance.tf 
