@@ -10,7 +10,7 @@ import jinja2
 template_loader = jinja2.FileSystemLoader(searchpath="./templates")
 template_env = jinja2.Environment(loader=template_loader)
 
-directory = "../../infra-tools"
+directory = "../infra-tools"
 
 custom_theme = Theme({"success": "green", "error": "bold red"})
 
@@ -18,7 +18,7 @@ console = Console()
 
 folder_name = "infra-tools"
 file_name = "main.tf"
-path = "../../" + str(folder_name)
+path = "../" + str(folder_name)
 
 def repoCreator():
     console.print("Repo Creator selected 📁", style="underline bold")
@@ -84,7 +84,7 @@ def repoCreator():
         project_description=project_description,
         usage_instructions=usage_instructions)
 
-    with open(os.path.join("../..", folder_name, "README.md"), "w") as f:
+    with open(os.path.join("..", folder_name, "README.md"), "w") as f:
         f.write(output)
 
     # create tf options
@@ -101,7 +101,7 @@ def terraformSelector(options, path):
     #inside the template file is a for loop that iterates over options and adds whichever is in the array
     output = template.render(selected_options=options)
 
-    with open(os.path.join("../..", folder_name, path, "stage/services", "main.tf"), "w") as f:
+    with open(os.path.join("..", folder_name, path, "stage/services", "main.tf"), "w") as f:
         f.write(output)
 
 def awsOption():
@@ -126,6 +126,7 @@ def azureOption():
         {"name": "Single Virtual Machine", "checked": False},
         {"name": "Cluster of Virtual Machines", "checked": False},
         {"name": "static web app", "checked": False},
+        {"name": "blob storage", "checked": False},
     ]
     selected_options = questionary.checkbox(
         "Select options:",
