@@ -96,13 +96,19 @@ def repoCreator():
         terraformSelector(gcpOptions, 'gcp')
         console.print("gcp tf")
 
-def terraformSelector(options, path):
-    template = template_env.get_template(path + "-main_template.j2")
+def terraformSelector(options, provider):
+    template = template_env.get_template(provider + "-main_template.j2")
+    #TODO: maybe have an if statement to generate in either stage or prod
     #inside the template file is a for loop that iterates over options and adds whichever is in the array
     output = template.render(selected_options=options)
 
-    with open(os.path.join("..", folder_name, path, "stage/services", "main.tf"), "w") as f:
+    with open(os.path.join("..", folder_name, provider, "stage/services", "main.tf"), "w") as f:
         f.write(output)
+
+    #copy backend.hcl into directory
+    os.system(f"cp ./templates/backend.j2 {path}/{provider}/stage/services/backend.hcl")
+
+
 
 def awsOption():
     console.print("you have selected [cyan]AWS[/]")

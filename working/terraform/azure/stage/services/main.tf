@@ -10,7 +10,7 @@ provider "azurerm" {
 }
 
 locals {
-  prefixname = "multicloudify"
+  prefixname = "mcloudify"
   location   = "westus"
 }
 
@@ -21,7 +21,12 @@ resource "azurerm_resource_group" "rg" {
 
 module "basic_vm" {
   source     = "../../modules/basic_vm"
-  prefixname = "multicloudify-azure"
+  prefixname = local.prefixname
   rgname     = azurerm_resource_group.rg.name
 }
 
+module "blob_storage" {
+  source     = "../../modules/blob_storage"
+  prefixname = local.prefixname
+  rgname     = azurerm_resource_group.rg.name
+}

@@ -1,4 +1,15 @@
 #!/bin/bash
+echo "(export AWS_SECRET_ACCESS_KEY=... | az login)"
+echo " "
+echo "Have you logged into AWS and/or Azure? (y/N)"
+read answer
+
+if [ "$answer" == "Y" ] || [ "$answer" == "y" ]; then
+  echo "Proceeding with the script..."
+else
+  echo "Please perform the necessary tasks before running the script."
+  exit 1
+fi
 
 # check if terraform is installed
 if ! command -v terraform &> /dev/null
