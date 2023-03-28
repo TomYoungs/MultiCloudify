@@ -19,14 +19,19 @@ resource "azurerm_resource_group" "rg" {
   location = local.location
 }
 
-module "basic_vm" {
-  source     = "../../modules/basic_vm"
-  prefixname = local.prefixname
-  rgname     = azurerm_resource_group.rg.name
-}
+# module "basic_vm" {
+#   source     = "../../modules/basic_vm"
+#   prefixname = local.prefixname
+#   rgname     = azurerm_resource_group.rg.name
+# }
 
-module "blob_storage" {
-  source     = "../../modules/blob_storage"
-  prefixname = local.prefixname
-  rgname     = azurerm_resource_group.rg.name
+# module "blob_storage" {
+#   source     = "../../modules/blob_storage"
+#   prefixname = local.prefixname
+#   rgname     = azurerm_resource_group.rg.name
+# }
+
+module "static_web_app" {
+  source = "../../modules/static_web_app"
+  rg     = azurerm_resource_group.rg.name
 }

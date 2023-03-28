@@ -27,7 +27,7 @@ module "basic_vm" {
   rgname     = azurerm_resource_group.rg.name
 }
 
-  {% elif option == "blob storage" -%}
+  {% elif option == "Blob Storage" -%}
 module "blob_storage" {
   source = "../../modules/blob_storage"
   prefixname = local.prefixname  
@@ -35,5 +35,10 @@ module "blob_storage" {
   rgname = azurerm_resource_group.rg.name 
 }
 
+  {% elif option == "Static Web App" -%}
+module "static_web_app" {
+  source = "../../modules/static_web_app"
+  rg     = azurerm_resource_group.rg.name
+}
   {%- endif %}
 {%- endfor %}

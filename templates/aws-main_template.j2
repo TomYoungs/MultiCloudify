@@ -26,7 +26,7 @@ module "basic_ec2" {
 }
   {% elif option == "Cluster of EC2s" %}
 module "cluster_ec2" {
-  source        = "../../modules/services/webserver-cluster"
+  source        = "../../modules/webserver-cluster"
   ami           = "ami-0568936c8d2b91c4e"
   instance_type = "t2.micro"
 }

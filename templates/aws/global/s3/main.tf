@@ -3,8 +3,11 @@ provider "aws" {
 }
 
 #NOTE this state code is difficult to delete in order to remove this code you need to
-#1. remove the backend config and run tf init 
-#2. then run tf destroy 
+#1. remove the backend config and run tf init -migrate-state
+#2. comment out the lifecycle prevent destroy, this prevents the tf destroy command
+#3. uncomment the force_destroy, if there is existing state versions this will prevent the command
+#3. run tf apply to remove lifecycle and enable force destroy
+#3. then if apply is successful run tf destroy
 
 resource "aws_s3_bucket" "terraform-state" {
   bucket = "${var.prefixname}-terraform-state"
@@ -12,6 +15,7 @@ resource "aws_s3_bucket" "terraform-state" {
   lifecycle {
     prevent_destroy = true
   }
+  # force_destroy = true
 }
 
 resource "aws_s3_bucket_versioning" "enabled" {

@@ -1,24 +1,27 @@
-terraform {
-  #parametes are omitted to the backend.hcl therefore when initializing add flag; tf init -backend-config=backend.hcl
-  backend "s3" {
-    key = "global/s3/terraform.tfstate"
-  }
-}
+# terraform {
+#   #parametes are omitted to the backend.hcl therefore when initializing add flag; tf init -backend-config=backend.hcl
+#   backend "s3" {
+#     key = "global/s3/terraform.tfstate"
+#   }
+# }
 
 provider "aws" {
   region = "us-east-2"
 }
 
 #NOTE this state code is difficult to delete in order to remove this code you need to
-#1. remove the backend config and run tf init 
-#2. then run tf destroy 
+#1. remove the backend config and run tf init -migrate-state
+#2. comment out the lifecycle prevent destroy, this prevents the tf destroy command
+#3. run tf apply to remove lifecycle
+#3. then run tf destroy 
 
 resource "aws_s3_bucket" "terraform-state" {
   bucket = "${var.prefixname}-terraform-state"
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_versioning" "enabled" {

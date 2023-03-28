@@ -94,7 +94,6 @@ def repoCreator():
         terraformSelector(azureOptions, 'azure')
     if gcpOptions:
         terraformSelector(gcpOptions, 'gcp')
-        console.print("gcp tf")
 
 def terraformSelector(options, provider):
     template = template_env.get_template(provider + "-main_template.j2")
@@ -102,12 +101,14 @@ def terraformSelector(options, provider):
     #inside the template file is a for loop that iterates over options and adds whichever is in the array
     output = template.render(selected_options=options)
 
+    # generate provider folder
+    os.system(f"cp -r ./templates/{provider} {path}/{provider}")
+
     with open(os.path.join("..", folder_name, provider, "stage/services", "main.tf"), "w") as f:
         f.write(output)
 
     #copy backend.hcl into directory
     os.system(f"cp ./templates/backend.j2 {path}/{provider}/stage/services/backend.hcl")
-
 
 
 def awsOption():
@@ -130,9 +131,8 @@ def azureOption():
     console.print("(note some options are packaged with others please check that you don't have conflicting options when deploying)", style="italic Blue") 
     options = [
         {"name": "Single Virtual Machine", "checked": False},
-        {"name": "Cluster of Virtual Machines", "checked": False},
-        {"name": "static web app", "checked": False},
-        {"name": "blob storage", "checked": False},
+        {"name": "Static Web App", "checked": False},
+        {"name": "Blob Storage", "checked": False},
     ]
     selected_options = questionary.checkbox(
         "Select options:",
@@ -165,22 +165,3 @@ if menu_entry_index == 0:
     
 elif menu_entry_index == 1:
     console.print("Terraform generator selected 🍀", style="underline bold")
-
-
-
-
-
-
-
-# console.print("[bold]This [cyan]is[/] some text.[/]")
-
-# text = Text("Hello, World!")
-# text.stylize("bold magenta", 0, 6)
-# console.print(text)
-
-# console = Console(theme=custom_theme)
-
-# console.print("operation successful!", style="success")
-# console.print("operation failed!", style="error")
-# console.print("operation [error]Failed![/error]")
-
