@@ -6,7 +6,7 @@ A tool for creating multi-cloud platforms
 
 ## Usage/Limitations
 to use hosted state make sure the S3 bucket is deployed and initialized
-```json
+```terraform
 terraform {
   backend "s3" {
     bucket = "infra-tools-terraform-state"
