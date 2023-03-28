@@ -28,4 +28,4 @@ jobs:
       
       - name: Apply Terraform changes
         working-directory: aws/stage/services
-        run: terraform apply
+        run: terraform apply -auto-approve
