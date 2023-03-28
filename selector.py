@@ -40,12 +40,12 @@ def repoCreator():
 
     confirmstart = console.input("\n[bold]start repo generation?[/] (Y/n)")
     if confirmstart.lower() == "y":
-        print("Starting repo generation...")
+        console.print("Starting repo generation...")
     elif confirmstart.lower() == "n":
-        print("Aborting repo generation.")
+        console.print("Aborting repo generation.")
         return 
     else:
-        print("Invalid input. Aborting repo generation.")
+        console.print("Invalid input. Aborting repo generation.")
         return
 
     #--START CREATION--
@@ -95,6 +95,50 @@ def repoCreator():
     if gcpOptions:
         terraformSelector(gcpOptions, 'gcp')
 
+    #generate state
+    console.print("[green]Success![/] your repo is now created")
+    console.print("\n")
+    console.print("instantiate AWS s3 bucket? for managing state (Y/n)")
+    if confirmstart.lower() == "y":
+        # export AWS_SECRET_ACCESS_KEY and login to Azure
+        console.print("(export AWS_SECRET_ACCESS_KEY=... | az login)")
+
+        # prompt user to login to AWS and/or Azure
+        answer = input("\nHave you logged into AWS and/or Azure? (y/N)")
+
+        # check user response and proceed accordingly
+        if answer.lower() == "y":
+           console.print("Proceeding with the script...")
+        else:
+            console.print("Please perform the necessary tasks before running the script.")
+            exit(1)
+
+        # check if terraform is installed
+        if os.system("terraform --version") != 0:
+            console.print("terraform could not be found please install")
+            exit(1)
+
+        # initialize the state by creating the S3 bucket
+        os.chdir(f"../{folder_name}/aws/global/s3")
+        os.system("terraform init")
+        os.system("terraform apply")
+
+        # add reference to tf state and initialize it
+        with open("main.tf", "a") as f:
+            f.write('''
+
+terraform {
+    backend "s3" {
+        key = "global/s3/terraform.tfstate"
+    }
+}
+        ''')
+        os.system("terraform init -backend-config=backend.hcl")
+        os.system("terraform apply")
+    else:
+        console.print("Thanks")
+        return
+
 def terraformSelector(options, provider):
     template = template_env.get_template(provider + "-main_template.j2")
     #TODO: maybe have an if statement to generate in either stage or prod
@@ -109,8 +153,6 @@ def terraformSelector(options, provider):
 
     #copy backend.hcl into directory
     os.system(f"cp ./templates/backend.j2 {path}/{provider}/stage/services/backend.hcl")
-
-
 def awsOption():
     console.print("you have selected [cyan]AWS[/]")
     console.print("(note some options are packaged with others please check that you don't have conflicting options when deploying)", style="italic Blue") 
@@ -125,7 +167,6 @@ def awsOption():
     ).ask()
     
     return selected_options
-
 def azureOption():
     console.print("you have selected [magenta]AZURE[/]")
     console.print("(note some options are packaged with others please check that you don't have conflicting options when deploying)", style="italic Blue") 
@@ -158,7 +199,6 @@ console.print("Please select mode:")
 options = ["Repo Creator", "Terraform Generator"]
 terminal_menu = TerminalMenu(options)
 menu_entry_index = terminal_menu.show()
-
 
 if menu_entry_index == 0:
     repoCreator()
