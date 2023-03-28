@@ -32,6 +32,6 @@ terraform {
   }
 }" >> main.tf
 
-tf init -backend-config=backend.hcl
+terraform init -backend-config=backend.hcl
 # add state file
-tf apply
+terraform apply
