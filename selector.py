@@ -98,7 +98,7 @@ def repoCreator():
     #generate state
     console.print("[green]Success![/] your repo is now created")
     console.print("\n")
-    console.print("instantiate AWS s3 bucket? for managing state (Y/n)")
+    console.input("Instantiate AWS s3 bucket? (for managing terraform state) (Y/n)")
     if confirmstart.lower() == "y":
         # export AWS_SECRET_ACCESS_KEY and login to Azure
         console.print("(export AWS_SECRET_ACCESS_KEY=... | az login)")
