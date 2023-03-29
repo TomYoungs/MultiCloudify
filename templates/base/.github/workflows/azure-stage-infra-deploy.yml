@@ -1,0 +1,28 @@
+name: Deploy Azure Staging Environment
+
+on:
+  push:
+    paths:
+      - 'azure/stage/**'
+# workflow dispatch is used if you want to manually run deployments from GitHub, this is not adviced without adding any verification, however for setting up and testing it can be left as is
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+    
+    - name: Initialize Terraform
+      working-directory: azure/stage/services
+      run: terraform init -backend-config=backend.hcl
+    
+      
+    - name: Apply Terraform changes
+      working-directory: azure/stage/services
+      run: terraform apply -auto-approve

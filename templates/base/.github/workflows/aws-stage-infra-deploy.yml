@@ -1,12 +1,11 @@
-name: Deploy Staging Environment
+name: Deploy AWS Staging Environment
 
 on:
   push:
     paths:
       - 'aws/stage/**'
-# workflow dispatch is used if you want to manually run deployments from GitHub is not adviced however for setting up and testing it can be left as is
+# workflow dispatch is used if you want to manually run deployments from GitHub, this is not adviced without adding any verification, however for setting up and testing it can be left as is
   workflow_dispatch:
-
 
 jobs:
   deploy:
