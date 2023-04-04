@@ -98,7 +98,7 @@ def repoCreator():
     #generate state
     console.print("[green]Success![/] your repo is now created")
     console.print("\n")
-    console.input("Instantiate AWS s3 bucket? (for managing terraform state) (Y/n)")
+    confirmstart = input("Instantiate AWS s3 bucket? (for managing terraform state) (Y/n)")
     if confirmstart.lower() == "y":
         # export AWS_SECRET_ACCESS_KEY and login to Azure
         console.print("(export AWS_SECRET_ACCESS_KEY=... | az login)")
@@ -135,6 +135,17 @@ terraform {
         ''')
         os.system("terraform init -backend-config=backend.hcl")
         os.system("terraform apply")
+    else:
+        console.print("Thanks")
+        return
+
+    confirmstart = input("Do you want to configure Git/GitHub repository? [y/N]")
+    if(confirmstart == 'y'):
+        os.chdir(f"../{folder_name}/")#TODO: check this works may need to reset directory
+        os.system("git init")
+        giturl = input("Can you setup a GitHub repository and enter the url? (SSH or HTTPS)")
+        os.system(f"git remote add origin {giturl}")
+        os.system("git push -u origin master")
     else:
         console.print("Thanks")
         return
