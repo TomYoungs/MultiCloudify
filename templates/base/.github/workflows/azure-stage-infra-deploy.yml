@@ -1,28 +1,41 @@
-name: Deploy Azure Staging Environment
+name: stage deploy azure
 
 on:
-  push:
-    paths:
-      - 'azure/stage/**'
-# workflow dispatch is used if you want to manually run deployments from GitHub, this is not adviced without adding any verification, however for setting up and testing it can be left as is
   workflow_dispatch:
-
+  
 jobs:
-  deploy:
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: Azure/login@v1
+      with: 
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: tf install
+      uses: hashicorp/setup-terraform@v2
     
-    - name: Login via Azure CLI
-      uses: azure/login@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-    
-    - name: Initialize Terraform
-      working-directory: azure/stage/services
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+          
+    - name: tf init
       run: terraform init -backend-config=backend.hcl
-    
-      
-    - name: Apply Terraform changes
       working-directory: azure/stage/services
+      env:
+        ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
+        ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+        ARM_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
+    - name: tf apply
       run: terraform apply -auto-approve
+      working-directory: azure/stage/services
+      env:
+        ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
+        ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+        ARM_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
