@@ -5,6 +5,7 @@ from simple_term_menu import TerminalMenu
 import questionary
 import os
 import jinja2
+import sys
 
 # Set up Jinja2 environment
 template_loader = jinja2.FileSystemLoader(searchpath="./templates")
@@ -119,6 +120,7 @@ def repoCreator():
             exit(1)
 
         # initialize the state by creating the S3 bucket
+        os.chdir(sys.path[0])
         os.chdir(f"../{folder_name}/aws/global/s3")
         os.system("terraform init")
         os.system("terraform apply")
@@ -141,9 +143,12 @@ terraform {
 
     confirmstart = input("Do you want to configure Git/GitHub repository? [y/N]")
     if(confirmstart == 'y'):
+        os.chdir(sys.path[0])
         os.chdir(f"../{folder_name}/")#TODO: check this works may need to reset directory
         os.system("git init")
-        giturl = input("Can you setup a GitHub repository and enter the url? (SSH or HTTPS)")
+        os.system('git add --all')
+        os.system('git commit -m "first commit 👋"')
+        giturl = input("Can you setup a GitHub repository and enter the url? (SSH or HTTPS): ")
         os.system(f"git remote add origin {giturl}")
         os.system("git push -u origin master")
     else:
