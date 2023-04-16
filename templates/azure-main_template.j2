@@ -40,5 +40,6 @@ module "static_web_app" {
   source = "../../modules/static_web_app"
   rg     = azurerm_resource_group.rg.name
 }
+
   {%- endif %}
 {%- endfor %}
