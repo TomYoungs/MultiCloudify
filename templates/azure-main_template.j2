@@ -18,16 +18,15 @@ resource "azurerm_resource_group" "rg" {
   name     = "${local.prefixname}-resource-group"
   location = local.location
 }
-
 {% for option in selected_options -%}
-  {% if option == "Single Virtual Machine" -%}
+  {% if option == "Single Virtual Machine" %}
 module "basic_vm" {
   source     = "../../modules/basic_vm"
   prefixname = "multicloudify-azure"
   rgname     = azurerm_resource_group.rg.name
 }
+  {% elif option == "Blob Storage" %}
 
-  {% elif option == "Blob Storage" -%}
 module "blob_storage" {
   source = "../../modules/blob_storage"
   prefixname = local.prefixname  
@@ -35,11 +34,11 @@ module "blob_storage" {
   rgname = azurerm_resource_group.rg.name 
 }
 
-  {% elif option == "Static Web App" -%}
+  {% elif option == "Static Web App" %}
+
 module "static_web_app" {
   source = "../../modules/static_web_app"
   rg     = azurerm_resource_group.rg.name
 }
-
   {%- endif %}
 {%- endfor %}
