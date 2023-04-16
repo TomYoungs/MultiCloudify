@@ -138,8 +138,7 @@ terraform {
         os.system("terraform init -backend-config=backend.hcl")
         os.system("terraform apply")
     else:
-        console.print("Thanks")
-        return
+        console.print("[green]State management not instantiated[/]")
 
     confirmstart = input("Do you want to configure Git/GitHub repository? [y/N]")
     if(confirmstart == 'y'):
@@ -152,8 +151,7 @@ terraform {
         os.system(f"git remote add origin {giturl}")
         os.system("git push -u origin master")
     else:
-        console.print("Thanks")
-        return
+        console.print("[green]Git not instantiated[/]")
 
 def terraformSelector(options, provider):
     template = template_env.get_template(provider + "-main_template.j2")
